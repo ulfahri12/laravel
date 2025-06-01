@@ -22,12 +22,12 @@
                 @csrf
                 <img src="{{ asset('img/man.png') }}" alt="admin" height="100" width="100">
                 <h1>Karyawan</h1>
-                <div class="input-box">
+                <div class="input-box" style="position: relative;">
                     <x-input-error-login :messages="$errors->get('email')" class="mt-2" />
-                    {{-- <input type="email" name="email" id="email" autofocus
-                        autocomplete="username" placeholder="Username" required /> --}}
-                    <input id="email" type="email" name="email" required autofocus autocomplete="username" :value="old('email')" placeholder="Username" />
+                    
+                    <input id="email" type="email" name="email" required autofocus autocomplete="username" value="{{ old('email') }}" placeholder="Username" />
                     <i class="bx bxs-user"></i>
+                    
                 </div>
                 <div class="input-box">
                     <input type="password" name="password" id="password" autocomplete="current-password"

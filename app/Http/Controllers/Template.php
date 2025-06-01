@@ -8,6 +8,7 @@ class Template extends Controller
 {
     public function index ()
     {
-        return view('template');
+        $page = 'dash';
+        return view('template', compact($page));
     }
 }
