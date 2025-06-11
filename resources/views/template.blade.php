@@ -185,13 +185,13 @@
                             @else
                                 <x-icon-role name="Karyawan" icon="{{ Auth::user()->icon_role }}" />
                             @endif
-                            
+
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <!--begin::User Image-->
                             <li class="user-header text-bg-primary">
-                                <img src="img/{{ Auth::user()->icon_role }}"
-                                    class="rounded-circle shadow" alt="User Image" />
+                                <img src="img/{{ Auth::user()->icon_role }}" class="rounded-circle shadow"
+                                    alt="User Image" />
                                 <p>
                                     Abdul Jalil - Owner
                                     <small>Since Nov. 2018</small>
@@ -223,7 +223,7 @@
             <!--end::Container-->
         </nav>
         <!--end::Header-->
-        
+
         <!--begin::Sidebar-->
         <aside class="app-sidebar shadow" data-bs-theme="dark" style="background: #111827">
             <!--begin::Sidebar Brand-->
@@ -258,17 +258,48 @@
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon bi bi-box-seam-fill"></i>
-                                <p>Manajemen Barang</p>
+                                <p>
+                                    Manajemen Barang
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/manage-barang" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Data Barang</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./index2.html" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Kategori</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon bi bi-recycle"></i>
                                 <p>
-                                    Stok Masuk & Keluar
+                                    Barang Masuk & Keluar
                                     <i class="nav-arrow bi bi-chevron-right"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="./index.html" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Barang Masuk</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./index2.html" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Barang Keluar</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -570,6 +601,94 @@
         sparkline3.render();
     </script>
     <!--end::Script-->
+
+
+    <!-- Script Cropper -->
+    <script>
+  let cropper;
+  let uploadedImageURL;
+
+  const uploadInput = document.getElementById('upload');
+  const image = document.getElementById('image');
+  const cropBtn = document.getElementById('cropBtn');
+  const result = document.getElementById('result');
+  const cropModalElement = document.getElementById('cropModal');
+  const cropModal = new bootstrap.Modal(cropModalElement, {
+    backdrop: 'static',
+    keyboard: false
+  });
+
+  uploadInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (uploadedImageURL) {
+      URL.revokeObjectURL(uploadedImageURL);
+    }
+
+    uploadedImageURL = URL.createObjectURL(file);
+    image.src = uploadedImageURL;
+
+    // Buka modal dulu
+    cropModal.show();
+  });
+
+  // Inisialisasi cropper setelah modal benar-benar tampil dan gambar load
+  cropModalElement.addEventListener('shown.bs.modal', () => {
+    if (cropper) {
+      cropper.destroy();
+      cropper = null;
+    }
+
+    // Pastikan gambar sudah load sebelum init cropper
+    if (image.complete && image.naturalWidth !== 0) {
+      cropper = new Cropper(image, {
+        aspectRatio: NaN,
+        viewMode: 1,
+        background: false,
+        autoCropArea: 0.7,
+        responsive: true,
+        minContainerWidth: 0,
+        minContainerHeight: 0,
+      });
+    } else {
+      image.onload = () => {
+        cropper = new Cropper(image, {
+          aspectRatio: NaN,
+          viewMode: 1,
+          background: false,
+          autoCropArea: 0.7,
+          responsive: true,
+          minContainerWidth: 0,
+          minContainerHeight: 0,
+        });
+      };
+    }
+  });
+
+  cropModalElement.addEventListener('hidden.bs.modal', () => {
+    if (cropper) {
+      cropper.destroy();
+      cropper = null;
+    }
+    // Clear image src agar siap untuk input baru
+    image.src = '';
+    uploadInput.value = '';
+  });
+
+  cropBtn.addEventListener('click', () => {
+    if (!cropper) return;
+
+    const canvas = cropper.getCroppedCanvas({
+      maxWidth: 500,
+      maxHeight: 500,
+      fillColor: '#fff'
+    });
+    result.src = canvas.toDataURL();
+    cropModal.hide();
+  });
+</script>
+
 </body>
 <!--end::Body-->
 

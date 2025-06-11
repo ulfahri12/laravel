@@ -28,7 +28,10 @@ class AuthenticatedSessionController extends Controller
 
     public function info()
     {
-        $data = ['title'=> 'Info'];
+        $data = [
+            'title'=> 'Info',
+            'page' => 'user.info'
+        ];
         return view('template', $data);
     }
 
